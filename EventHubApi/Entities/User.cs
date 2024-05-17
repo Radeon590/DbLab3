@@ -1,4 +1,6 @@
-﻿namespace EventsHubApi.Entities
+﻿using System.Text.Json.Serialization;
+
+namespace EventsHubApi.Entities
 {
     public class User
     {
@@ -10,7 +12,8 @@
         public string SecondName { get; set; }
         public string Patronymic { get; set; }
         public int Age { get; set; }
-        public List<Event> Events { get; set; }
+        [JsonIgnore]
+        public List<Event>? Events { get; set; }
 
         public User() { }
 

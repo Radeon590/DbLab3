@@ -1,4 +1,6 @@
-﻿namespace EventsHubApi.Entities
+﻿using System.Text.Json.Serialization;
+
+namespace EventsHubApi.Entities
 {
     public class Event
     {
@@ -9,8 +11,10 @@
         public DateTime Date { get; set; }
         public float Price { get; set; }
         public int OrganizerId { get; set; }
+        [JsonIgnore]
         public Organizer? Organizer { get; set; }
-        public List<User> Users { get; set; }
+        [JsonIgnore]
+        public List<User>? Users { get; set; }
 
         public Event() { }
 

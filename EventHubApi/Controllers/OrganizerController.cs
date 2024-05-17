@@ -61,7 +61,7 @@ namespace EventsHubApi.Controllers
         }
 
         [HttpGet]
-        [Route("ReadFull")]
+        [Route("ReadEvents")]
         [Authorize(Roles = AuthRoles.Organizer)]
         public async Task<IResult> ReadFull(int organizerId)
         {
@@ -71,7 +71,7 @@ namespace EventsHubApi.Controllers
                 return Results.NotFound("organizer not found");
             }
             //
-            return Results.Json(organizer);
+            return Results.Json(organizer.Events);
         }
 
         /*[HttpPatch]

@@ -1,4 +1,6 @@
-﻿namespace EventsHubApi.Entities
+﻿using System.Text.Json.Serialization;
+
+namespace EventsHubApi.Entities
 {
     public class Organizer
     {
@@ -7,6 +9,7 @@
         public string Password { get; set; }
         public string FullNamespace { get; set; }
         public string? Description { get; set; }
+        [JsonIgnore]
         public List<Event>? Events { get; set; }
 
         public Organizer() { }
