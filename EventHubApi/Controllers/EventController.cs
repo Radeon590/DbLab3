@@ -11,10 +11,12 @@ namespace EventsHubApi.Controllers
     public class EventController : ControllerBase
     {
         private readonly ApplicationContext _applicationContext;
+        private readonly ILogger _logger;
 
-        public EventController(ApplicationContext applicationContext)
+        public EventController(ApplicationContext applicationContext, ILogger<EventController> logger)
         {
             _applicationContext = applicationContext;
+            _logger = logger;
         }
 
         [HttpPost]
@@ -67,6 +69,39 @@ namespace EventsHubApi.Controllers
             }
             //
             return Results.Json(resultEvent.Users);
+        }
+
+        [HttpPatch]
+        [Route("AddUser")]
+        [Authorize(Roles = AuthRoles.User)]
+        public async Task<IResult> AddUser(int eventId, int userId)
+        {
+            _logger.LogInformation("addUser");
+            _logger.LogDebug("read event");
+            Event? resultEvent = await _applicationContext.Events.Include(e => e.Users).Where(e => e.Id == eventId).FirstOrDefaultAsync();
+            if (resultEvent == null)
+            {
+                return Results.NotFound("event not found");
+            }
+            //
+            _logger.LogDebug("read user");
+            User? user = await _applicationContext.Users.Where(u => u.Id == userId).FirstOrDefaultAsync();
+            if (user == null) 
+            {
+                return Results.NotFound("user not found");
+            }
+            //
+            _logger.LogDebug("add user");
+            if (resultEvent.Users == null)
+            {
+                resultEvent.Users = new List<User>() { user };
+            }
+            else
+            {
+                resultEvent?.Users?.Add(user);
+            }
+            await _applicationContext.SaveChangesAsync();
+            return Results.Ok();
         }
     }
 }
