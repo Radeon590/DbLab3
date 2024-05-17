@@ -4,9 +4,10 @@
     {
         public int Id { get; set; }
         public string PublicNamespace { get; set; }
+        public string Password { get; set; }
         public string FullNamespace { get; set; }
         public string? Description { get; set; }
-        public List<Event> Events { get; set; }
+        public List<Event>? Events { get; set; }
 
         public Organizer() { }
 
