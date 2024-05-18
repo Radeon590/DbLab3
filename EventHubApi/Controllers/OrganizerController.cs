@@ -22,6 +22,10 @@ namespace EventsHubApi.Controllers
         [Route("Create")]
         public async Task<IResult> Create([FromBody] Organizer organizer)
         {
+            if (_applicationContext.Organizers.Where(o => o.PublicNamespace == organizer.PublicNamespace && o.FullNamespace == organizer.FullNamespace).Count() > 0)
+            {
+                return Results.Conflict("organizer is not unique");
+            }
             _applicationContext.Organizers.Add(organizer);
             await _applicationContext.SaveChangesAsync();
             return Results.Ok(organizer.Id);
@@ -52,6 +56,20 @@ namespace EventsHubApi.Controllers
         public async Task<IResult> Read(int organizerId)
         {
             Organizer? organizer = await _applicationContext.Organizers.Where(o => o.Id == organizerId).FirstOrDefaultAsync();
+            if (organizer == null)
+            {
+                return Results.NotFound("organizer not found");
+            }
+            //
+            return Results.Json(organizer);
+        }
+
+        [HttpGet]
+        [Route("ReadByNamespace")]
+        [Authorize(Roles = AuthRoles.Organizer)]
+        public async Task<IResult> Read(string publicNamespace)
+        {
+            Organizer? organizer = await _applicationContext.Organizers.Where(o => o.PublicNamespace == publicNamespace).FirstOrDefaultAsync();
             if (organizer == null)
             {
                 return Results.NotFound("organizer not found");
