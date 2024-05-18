@@ -1,37 +1,16 @@
-import { useRef, useState } from "react";
-import { useNavigate, Navigate } from "react-router";
+import { useState } from "react";
 import { connect } from "react-redux";
+import { Navigate } from "react-router";
 import "../css/input-group.css";
 import { setAccount } from "../store/actionCreators/account";
 import UserSignIn from '../components/UserSignIn';
 import UserSignUp from "../components/UserSignUp";
+import OrganizationSignUp from "../components/OrganizationSignUp";
+import OrganizationSignIn from "../components/OrganizationSignIn";
 
 function SignIn({ account, setAccount }) {
   const [isSignIn, setIsSignIn] = useState(true);
-  const [isUser] = useState(true);
-
-  const usernameInput = useRef(null);
-  const passwordInput = useRef(null);
-  const navigate = useNavigate();
-
-  async function signInAsUser() {
-    let result = await fetch(`http://localhost:5141/api/Users/Authorize?username=${usernameInput.current.value}&password=${passwordInput.current.value}`, {
-      method: "GET",
-      credentials: "include"
-    });
-    console.log(result.status);
-    console.log(result.statusText);
-    if (result.status === 200) {
-      let readUserResult = await fetch(`http://localhost:5141/api/Users/ReadByUsername?username=${usernameInput.current.value}`, {
-        method: "GET",
-        credentials: "include"
-      });
-      readUserResult.json().then(value => {
-        setAccount({ accountType: "user", data: value });
-      });
-      navigate("../");
-    }
-  }
+  const [isUser, setIsUser] = useState(true);
 
   if (account != null) {
     console.log("to profile");
@@ -40,25 +19,32 @@ function SignIn({ account, setAccount }) {
     )
   }
 
+  let MainArea = null;
+
   if (isUser) {
     if (isSignIn) {
-      return (
-        <div className="input-group">
-          <UserSignIn usernameInputRef={usernameInput} passwordInputRef={passwordInput} onSignIn={signInAsUser} />
-          <button onClick={() => setIsSignIn(false)}>SignUp</button>
-        </div>
-      );
+      MainArea = UserSignIn;
     }
     else {
-      console.log("signup");
-      return(
-        <div className="input-group">
-        <UserSignUp />
-        <button onClick={() => setIsSignIn(true)}>SignIn</button>
-      </div>
-      );
+      MainArea = UserSignUp;
     }
   }
+  else{
+    if(isSignIn) {
+      MainArea = OrganizationSignIn;
+    }
+    else {
+      MainArea = OrganizationSignUp;
+    }
+  }
+
+  return (
+    <div className="input-group">
+      <MainArea />
+      <button onClick={() => setIsSignIn(!isSignIn)}>{isSignIn ? "SignUp" : "SignIn"}</button>
+      <button onClick={() => setIsUser(!isUser)}>{isUser ? "sign as org" : "sign as user"}</button>
+    </div>
+  );
 }
 
 const mapStateToProps = state => {
