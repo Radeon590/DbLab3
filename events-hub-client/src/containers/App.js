@@ -4,6 +4,7 @@ import SignIn from "./signin";
 import Home from './home';
 import Profile from "./Profile";
 import MyEvents from "./MyEvents";
+import Events from "./Events";
 
 function App(props){
     return(
@@ -12,6 +13,7 @@ function App(props){
             <Route path="signin" element={<SignIn/>}/>
             <Route path="profile" element={ <Profile/> }/>
             <Route path="myEvents" element={ <MyEvents/> }/>
+            <Route path="events" element={ <Events /> }/>
         </Routes>
     );
 }

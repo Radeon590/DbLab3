@@ -17,6 +17,7 @@ else
 
 corsPolicyBuilder.AllowCredentials();
 corsPolicyBuilder.AllowAnyHeader();
+corsPolicyBuilder.WithMethods("GET", "POST", "PATCH");
 
 builder.Services.AddCors(o =>
 {

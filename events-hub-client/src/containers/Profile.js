@@ -17,6 +17,7 @@ function Profile({ account, cleanAccount }){
             <div>
                 { account.accountType === "user" ? <UserProfile data={account.data}/> : <OrganizationProfile data={account.data}/> } 
                 <button onClick={() => navigate('../myEvents')}>My events</button>
+                <button onClick={() => navigate('../events')}>Events</button>
                 <button onClick={signOut}>SignOut</button>
             </div>
         );

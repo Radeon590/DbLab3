@@ -44,6 +44,14 @@ namespace EventsHubApi.Controllers
         }
 
         [HttpGet]
+        [Route("ReadAll")]
+        [Authorize(Roles = $"{AuthRoles.Organizer}, {AuthRoles.User}")]
+        public async Task<IResult> ReadAll()
+        {
+            return Results.Json(await _applicationContext.Events.ToListAsync());
+        }
+
+        [HttpGet]
         [Route("ReadOrganizer")]
         [Authorize(Roles = $"{AuthRoles.Organizer}, {AuthRoles.User}")]
         public async Task<IResult> ReadOrganizer(int eventId)
@@ -69,6 +77,20 @@ namespace EventsHubApi.Controllers
             }
             //
             return Results.Json(resultEvent.Users);
+        }
+
+        [HttpGet]
+        [Route("IsUserParticipant")]
+        [Authorize(Roles = $"{AuthRoles.Organizer}, {AuthRoles.User}")]
+        public async Task<IResult> IsUserParticipant(int eventId, int userId)
+        {
+            Event? resultEvent = await _applicationContext.Events.Include(e => e.Users).Where(e => e.Id == eventId).FirstOrDefaultAsync();
+            if (resultEvent == null)
+            {
+                return Results.NotFound("event not found");
+            }
+            //
+            return Results.Ok(resultEvent.Users.Where(u => u.Id == userId).Count() != 0);
         }
 
         [HttpPatch]
