@@ -12,10 +12,12 @@ namespace EventsHubApi.Controllers
     public class OrganizerController : ControllerBase
     {
         private readonly ApplicationContext _applicationContext;
+        private readonly ILogger _logger;
 
-        public OrganizerController(ApplicationContext applicationContext)
+        public OrganizerController(ApplicationContext applicationContext, ILogger<OrganizerController> logger)
         {
             _applicationContext = applicationContext;
+            _logger = logger;
         }
 
         [HttpPost]

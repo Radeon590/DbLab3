@@ -10,24 +10,30 @@ function UserSignIn({ onSignIn, setAccount }) {
   const passwordInput = useRef(null);
   const navigate = useNavigate();
 
-  async function signInAsUser() {
-    let result = await fetch(`http://localhost:5141/api/Users/Authorize?username=${usernameInput.current.value}&password=${passwordInput.current.value}`, {
+  function signInAsUser() {
+    fetch(`http://localhost:5141/api/Users/Authorize?username=${usernameInput.current.value}&password=${passwordInput.current.value}`, {
       method: "GET",
       credentials: "include"
+    }).then(result => {
+      console.log(result.status);
+      console.log(result.statusText);
+      if (result.status === 200) {
+        fetch(`http://localhost:5141/api/Users/ReadByUsername?username=${usernameInput.current.value}`, {
+          method: "GET",
+          credentials: "include"
+        })
+        .then(r => {
+          return r.json();
+        })
+        .then(value => {
+          setAccount({ accountType: "user", data: value });
+        });
+        if (onSignIn != null && onSignIn !== undefined) {
+          onSignIn();
+        }
+        navigate("../");;
+      }
     });
-    console.log(result.status);
-    console.log(result.statusText);
-    if (result.status === 200) {
-      let readUserResult = await fetch(`http://localhost:5141/api/Users/ReadByUsername?username=${usernameInput.current.value}`, {
-        method: "GET",
-        credentials: "include"
-      });
-      readUserResult.json().then(value => {
-        setAccount({ accountType: "user", data: value });
-      });
-      onSignIn();
-      navigate("../");
-    }
   }
 
   return (

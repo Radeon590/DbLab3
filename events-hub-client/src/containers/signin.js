@@ -13,7 +13,7 @@ function SignIn({ account, setAccount }) {
   const [isUser, setIsUser] = useState(true);
 
   if (account != null) {
-    console.log("to profile");
+    console.log("signin.account is not null. go to profile");
     return (
       <Navigate to="../profile" replace={true} />
     )
