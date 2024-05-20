@@ -112,6 +112,20 @@ namespace EventsHubApi.Controllers
             return Results.NotFound();
         }
 
+        [HttpGet]
+        [Route("ReadEvents")]
+        [Authorize(Roles = AuthRoles.User)]
+        public async Task<IResult> ReadEvents(int id)
+        {
+            var user = await _applicationContext.Users.Include(u => u.Events).Where(u => u.Id == id).FirstOrDefaultAsync();
+            if (user == null)
+            {
+                return Results.NotFound("user not found");
+            }
+            return Results.Json(user.Events);
+        }
+
+
         [HttpPatch]
         [Route("Update")]
         [Authorize(Roles = AuthRoles.User)]

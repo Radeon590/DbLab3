@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import SignIn from "./signin";
 import Home from './home';
 import Profile from "./Profile";
+import MyEvents from "./MyEvents";
 
 function App(props){
     return(
@@ -10,6 +11,7 @@ function App(props){
             <Route path="/" element={<Home/>}/>
             <Route path="signin" element={<SignIn/>}/>
             <Route path="profile" element={ <Profile/> }/>
+            <Route path="myEvents" element={ <MyEvents/> }/>
         </Routes>
     );
 }

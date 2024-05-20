@@ -14,7 +14,7 @@ function EventCreate({ onCreate, account }) {
     const dateInput = useRef(null);
 
     function handleCreate() {
-        const userData = {
+        const eventData = {
             namespace: namespaceInput.current.value,
             description: descriptionInput.current.value,
             address: addressInput.current.value,
@@ -22,13 +22,14 @@ function EventCreate({ onCreate, account }) {
             price: 0,
             organizerId: account.data.id
         }
-        fetch(`http://localhost:5141/api/Organizer/Create`, {
+        fetch(`http://localhost:5141/api/Event/Create`, {
             method: "POST",
             credentials: "include",
             headers: { "Accept": "application/json", "Content-Type": "application/json" },
-            body: JSON.stringify(userData)
+            body: JSON.stringify(eventData)
         })
             .then(result => {
+                console.log(result.status);
                 if (result.status === 200) {
                     result.json().then(r => {
                         console.log("event created");
