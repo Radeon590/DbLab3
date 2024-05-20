@@ -35,7 +35,7 @@ function MyEvents({account}){
             )
             .then(
                 events => {
-                    events = events.map(e => <li><EventInfo data={e}/></li>)
+                    events = events.map(e => <li key={e.id}><EventInfo data={e}/></li>)
                     setEventsList(events);
                 }
             )
