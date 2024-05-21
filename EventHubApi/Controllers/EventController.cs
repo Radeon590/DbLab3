@@ -79,6 +79,22 @@ namespace EventsHubApi.Controllers
             return Results.Json(resultEvent.Users);
         }
 
+        [HttpPatch]
+        [Route("Cancel")]
+        [Authorize(Roles = AuthRoles.Organizer)]
+        public async Task<IResult> Cancel(int eventId)
+        {
+            Event? resultEvent = await _applicationContext.Events.Where(e => e.Id == eventId).FirstOrDefaultAsync();
+            if (resultEvent == null)
+            {
+                return Results.NotFound("event not found");
+            }
+            //
+            resultEvent.IsCancelled = true;
+            await _applicationContext.SaveChangesAsync();
+            return Results.Ok();
+        }
+
         [HttpGet]
         [Route("IsUserParticipant")]
         [Authorize(Roles = $"{AuthRoles.Organizer}, {AuthRoles.User}")]
@@ -121,6 +137,39 @@ namespace EventsHubApi.Controllers
             else
             {
                 resultEvent?.Users?.Add(user);
+            }
+            await _applicationContext.SaveChangesAsync();
+            return Results.Ok();
+        }
+
+        [HttpDelete]
+        [Route("DeleteUser")]
+        [Authorize(Roles = AuthRoles.User)]
+        public async Task<IResult> DeleteUser(int eventId, int userId)
+        {
+            _logger.LogInformation("addUser");
+            _logger.LogDebug("read event");
+            Event? resultEvent = await _applicationContext.Events.Include(e => e.Users).Where(e => e.Id == eventId).FirstOrDefaultAsync();
+            if (resultEvent == null)
+            {
+                return Results.NotFound("event not found");
+            }
+            //
+            _logger.LogDebug("read user");
+            User? user = await _applicationContext.Users.Where(u => u.Id == userId).FirstOrDefaultAsync();
+            if (user == null)
+            {
+                return Results.NotFound("user not found");
+            }
+            //
+            _logger.LogDebug("add user");
+            if (resultEvent.Users == null)
+            {
+                return Results.Conflict("event users is null");
+            }
+            else
+            {
+                resultEvent?.Users?.Remove(user);
             }
             await _applicationContext.SaveChangesAsync();
             return Results.Ok();
