@@ -33,13 +33,28 @@ function OrganizationSignUp({ onSignUp, setAccount }) {
                             accountType: "org",
                             data: orgData
                         }
-                        setAccount(newAccount);
-                        if (isOrgExists === true) {
-                            setIsOrgExists(false);
-                        }
-                        if (onSignUp != null && onSignUp !== undefined) {
-                            onSignUp();
-                        }
+                        fetch(`http://localhost:5141/api/Organizer/Authorize?publicNamespace=${orgData.publicNamespace}&password=${orgData.password}`,
+                            {
+                                method: 'GET',
+                                credentials: 'include'
+                            }
+                        )
+                            .then(
+                                r => {
+                                    if (r.status === 200) {
+                                        setAccount(newAccount);
+                                        if (isOrgExists === true) {
+                                            setIsOrgExists(false);
+                                        }
+                                        if (onSignUp != null && onSignUp !== undefined) {
+                                            onSignUp();
+                                        }
+                                    }
+                                    else{
+                                        console.log('auth error');
+                                    }
+                                }
+                            )
                     });
                 }
                 else if (result.status === 409) {

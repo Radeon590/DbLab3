@@ -39,13 +39,24 @@ function UserSignUp({ onSignUp, setAccount }) {
                             accountType: "user",
                             data: userData
                         }
-                        setAccount(newAccount);
-                        if (isUserExist === true) {
-                            setIsUserExist(false);
-                        }
-                        if (onSignUp != null && onSignUp !== undefined) {
-                            onSignUp();
-                        }
+                        //auth
+                        fetch(`http://localhost:5141/api/Users/Authorize?username=${userData.username}&password=${userData.password}`,{
+                            method: 'GET',
+                            credentials: 'include'
+                        })
+                        .then(
+                            r => {
+                                if (r.status === 200){
+                                    setAccount(newAccount);
+                                    if (isUserExist === true) {
+                                        setIsUserExist(false);
+                                    }
+                                    if (onSignUp != null && onSignUp !== undefined) {
+                                        onSignUp();
+                                    }
+                                }
+                            }
+                        );
                     });
                 }
                 else if (result.status === 409) {
