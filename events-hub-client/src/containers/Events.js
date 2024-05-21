@@ -3,10 +3,12 @@ import "../css/input-group.css";
 import { useState, useEffect } from "react";
 import EventUserJoin from "../components/EventUserJoin";
 import EventInfo from "../components/EventInfo";
-import '../css/text.css'
+import '../css/text.css';
+import { useNavigate } from "react-router";
 
 function Events({account}){
     const [eventsList, setEventsList] = useState(null);
+    const navigate = useNavigate();
 
     function loadEventsList(){
         fetch(`http://localhost:5141/api/Event/ReadAll`, {
@@ -41,6 +43,7 @@ function Events({account}){
     return(
         <div className="input-group">
             <h1>Events</h1>
+            <button onClick={() => navigate('../')}>Back</button>
             <ul>{eventsList}</ul>
         </div>
     );
