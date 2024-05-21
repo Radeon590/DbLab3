@@ -11,6 +11,18 @@ function Events({account}){
     const navigate = useNavigate();
 
     function loadEventsList(){
+        function cancelEvent(eventId){
+            fetch(`http://localhost:5141/api/Event/Cancel?eventId=${eventId}`, {
+                method: 'PATCH',
+                credentials: 'include'
+            })
+            .then(
+                r => {
+                    loadEventsList();
+                }
+            )
+        }
+
         fetch(`http://localhost:5141/api/Event/ReadAll`, {
                 method: 'GET',
                 credentials: 'include'
@@ -25,8 +37,17 @@ function Events({account}){
             .then(
                 events => {
                     console.log("map events");
+                    if(account.accountType === 'org'){
+                        events = events.filter(function(e) {
+                            if (e.isCancelled === true) {
+                              return false; // skip
+                            }
+                            return true;
+                          })
+                    }
                     events = events.map(e => <li className="input-group">
                         <EventInfo data={e}/>
+                        {account.accountType === 'org' & account.data.id === e.organizerId && <button onClick={() => cancelEvent(e.id)}></button>}
                         {account.accountType === 'user' && <EventUserJoin eventId={e.id} userId={account.data.id}/>}
                         {account.accountType === 'org' & account.data.id === e.organizerId && <p className="org">Your event</p>}
                     </li>)

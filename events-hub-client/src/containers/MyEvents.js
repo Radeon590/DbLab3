@@ -20,6 +20,14 @@ function MyEvents({account}){
             )
             .then(
                 events => {
+                    if(account.accountType === 'org'){
+                        events = events.filter(function(e) {
+                            if (e.isCancelled === true) {
+                              return false; // skip
+                            }
+                            return true;
+                          })
+                    }
                     events = events.map(e => <li><EventInfo data={e}/></li>)
                     setEventsList(events);
                 }
