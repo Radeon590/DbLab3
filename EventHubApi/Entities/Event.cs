@@ -10,7 +10,6 @@ namespace EventsHubApi.Entities
         public string Address { get; set; }
         public DateTime Date { get; set; }
         public float Price { get; set; }
-        public bool IsCancelled { get; set; }
         public int OrganizerId { get; set; }
         [JsonIgnore]
         public Organizer? Organizer { get; set; }
@@ -34,7 +33,6 @@ namespace EventsHubApi.Entities
             Date = date;
             Price = price;
             Users = users;
-            IsCancelled = false;
         }
 
         public Event(int organizerId, string namespacE, string description, string address, DateTime date, float price) 
@@ -52,7 +50,6 @@ namespace EventsHubApi.Entities
             Date = date;
             Price = price;
             Users = users;
-            IsCancelled = false;
         }
     }
 }
