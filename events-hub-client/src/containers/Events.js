@@ -45,7 +45,7 @@ function Events({account}){
                             return true;
                           })
                     }
-                    events = events.map(e => <li key={e.id} className="input-group">
+                    events = events.map(e => <li className="input-group">
                         <EventInfo data={e}/>
                         {account.accountType === 'org' & account.data.id === e.organizerId && <button onClick={() => cancelEvent(e.id)}></button>}
                         {account.accountType === 'user' && <EventUserJoin eventId={e.id} userId={account.data.id}/>}
