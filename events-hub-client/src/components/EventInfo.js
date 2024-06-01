@@ -1,6 +1,4 @@
-function EventInfo({ data, account }){
-    
-
+export default function EventInfo({ data }){
     return (
         <div>
             <h1>{data.namespace}</h1>
@@ -10,14 +8,3 @@ function EventInfo({ data, account }){
         </div>
     );
 }
-
-const mapStateToProps = state => {
-    return {
-        account: state.account
-    }
-};
-
-const mapDispatchToProps = {
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(EventInfo);
